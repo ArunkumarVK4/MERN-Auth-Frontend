@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-const USERS_URL = "https://mern-auth-al08.onrender.com/api/users";
+const USERS_URL = "http://localhost:5000/api/users";
 
 // http://localhost:5000
 // https://mern-auth-al08.onrender.com
@@ -13,11 +13,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
         credentials: "include",
       }),
+      
+      onSuccess: (result, variables, context) => {
+        
+        console.log("Cookies:")
+      }
     }),
     logout: builder.mutation({
       query: () => ({
         url: `${USERS_URL}/logout`,
         method: "POST",
+        credentials: "include",
       }),
     }),
     register: builder.mutation({
@@ -34,6 +40,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
         credentials: "include",
       }),
+      onSuccess: (result, variables, context) => {
+        console.log("Cookies:")
+      }
     }),
   }),
 });

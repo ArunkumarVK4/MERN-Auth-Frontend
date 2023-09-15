@@ -27,8 +27,11 @@ const LoginScreen = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    
     try {
+    
       const res = await login({ email, password }).unwrap();
+
       dispatch(setCredentials({ ...res }));
       navigate('/');
     } catch (err) {
