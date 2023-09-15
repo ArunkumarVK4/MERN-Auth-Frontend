@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-const USERS_URL = "http://localhost:5000/api/users";
+const USERS_URL = "https://mern-auth-al08.onrender.com/api/users";
 
 // http://localhost:5000
 // https://mern-auth-al08.onrender.com
