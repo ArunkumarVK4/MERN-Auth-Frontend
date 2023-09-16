@@ -20,7 +20,7 @@ import PrivateRoute from './components/PrivateRoute.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
-      <Route index={true} path='/' element={<LoginScreen />} />
+      <Route index={true} path='/' element={isLoggedIn ? <Hero /> :<HomeScreen />} />
       <Route path='/login' element={<LoginScreen />} />
       <Route path='/register' element={<RegisterScreen />} />
       <Route path='' element={<PrivateRoute />}>
