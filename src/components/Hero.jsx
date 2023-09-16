@@ -1,28 +1,103 @@
-import { Container, Card, Button } from 'react-bootstrap';
+import {useState, useEffect} from 'react';
+import axios from 'axios';
+import '../index.css';
 
-const Hero = () => {
+function Hero() {
+  const [itemText, setItemText] = useState('');
+  const [listItems, setListItems] = useState([]);
+  const [isUpdating, setIsUpdating] = useState('');
+  const [updateItemText, setUpdateItemText] = useState('');
+
+
+  const url = "https://mern-auth-al08.onrender.com"
+
+
+  //add new todo item to database
+  const addItem = async (e) => {
+    e.preventDefault();
+    try{
+      const res = await axios.post(`${url}/todo/api/item`, {item: itemText})
+      setListItems(prev => [...prev, res.data]);
+      setItemText('');
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  //Create function to fetch all todo items from database -- we will use useEffect hook
+  useEffect(()=>{
+    const getItemsList = async () => {
+      try{
+        const res = await axios.get(`${url}/todo/api/items`)
+        setListItems(res.data);
+      }catch(err){
+        console.log(err);
+      }
+    }
+    getItemsList()
+  },[]);
+
+  // Delete item when click on delete
+  const deleteItem = async (id) => {
+    try{
+      await axios.delete(`${url}/todo/api/item/${id}`)
+      const newListItems = listItems.filter(item=> item._id !== id);
+      setListItems(newListItems);
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  //Update item
+  const updateItem = async (e) => {
+    e.preventDefault()
+    try{
+      const res = await axios.put(`${url}/todo/api/item/${isUpdating}`, {item: updateItemText})
+      console.log(res.data)
+      const updatedItemIndex = listItems.findIndex(item => item._id === isUpdating);
+      const updatedItem = listItems[updatedItemIndex].item = updateItemText;
+      setUpdateItemText('');
+      setIsUpdating('');
+    }catch(err){
+      console.log(err);
+    }
+  }
+  //before updating item we need to show input field where we will create our updated item
+  const renderUpdateForm = () => (
+    <form className="update-form" onSubmit={(e)=>{updateItem(e)}} >
+      <input className="update-new-input" type="text" placeholder="New Item" onChange={e=>{setUpdateItemText(e.target.value)}} value={updateItemText} />
+      <button className="update-new-btn" type="submit">Update</button>
+    </form>
+  )
+
   return (
-    <div className=' py-5'>
-      <Container className='d-flex justify-content-center'>
-        <Card className='p-5 d-flex flex-column align-items-center hero-card bg-light w-75'>
-          <h1 className='text-center mb-4'>MERN Authentication</h1>
-          <p className='text-center mb-4'>
-            This is a boilerplate for MERN authentication that stores a JWT in
-            an HTTP-Only cookie. It also uses Redux Toolkit and the React
-            Bootstrap library
-          </p>
-          <div className='d-flex'>
-            <Button variant='primary' href='/login' className='me-3'>
-              Sign In
-            </Button>
-            <Button variant='secondary' href='/register'>
-              Register
-            </Button>
+    <div className="App">
+      <h1>Todo List</h1>
+      <form className="form" onSubmit={e => addItem(e)}>
+        <input type="text" placeholder='Add Todo Item' onChange={e => {setItemText(e.target.value)} } value={itemText} />
+        <button type="submit">Add</button>
+      </form>
+      <div className="todo-listItems">
+        {
+          listItems.map((item, idx) => (
+          <div className="todo-item" key={idx}>
+            {
+              isUpdating === item._id
+              ? renderUpdateForm()
+              : <>
+                  <p className="item-content">{item.item}</p>
+                  <button className="update-item" onClick={()=>{setIsUpdating(item._id)}}>Update</button>
+                  <button className="delete-item" onClick={()=>{deleteItem(item._id)}}>Delete</button>
+                </>
+            }
           </div>
-        </Card>
-      </Container>
+          ))
+        }
+        
+
+      </div>
     </div>
   );
-};
+}
 
 export default Hero;
