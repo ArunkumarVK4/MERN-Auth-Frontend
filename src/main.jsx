@@ -22,8 +22,9 @@ import Hero from './components/Hero.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
-      <Route index={true} path='/' element={<Hero/>} />
+      <Route index={true} path='/' element={<LoginScreen/>} />
       <Route path='/login' element={<LoginScreen />} />
+      <Route path='/todo' element={<HomeScreen />} />
       <Route path='/register' element={<RegisterScreen />} />
       <Route path='' element={<PrivateRoute />}>
         <Route path='/profile' element={<ProfileScreen />} />
