@@ -81,6 +81,12 @@ const LoginScreen = () => {
           New Customer? <Link to='/register'>Register</Link>
         </Col>
       </Row>
+      <div style={{margin:"0 auto"}}>
+        <h4>Demo credentials</h4>
+        <p>Email: arun1@gmail.com</p>
+        <p>Password: 1234</p>
+        <h3></h3>
+      </div>
     </FormContainer>
   );
 };
